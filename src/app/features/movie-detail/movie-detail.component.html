@@ -1,4 +1,4 @@
-<div class="movie-detail" *ngIf="!loading && movie">
+<div class="movie-detail" *ngIf="!loading && movie; else loadingOrError">
   <div class="header">
     <img
       class="poster"
@@ -12,15 +12,15 @@
 
       <div class="meta">
         <span>Lançamento: {{ movie.release_date | date:'dd/MM/yyyy' }}</span>
-        <span>Duração: {{ movie.runtime }} min</span>
+        <span *ngIf="movie.runtime">· Duração: {{ movie.runtime }} min</span>
       </div>
 
-      <div class="genres">
-        <span *ngFor="let g of movie.genres">{{ g.name }}</span>
+      <div class="genres" *ngIf="movie.genres?.length">
+        <span *ngFor="let g of movie.genres; trackBy: trackByGenre">{{ g.name }}</span>
       </div>
 
-      <div class="rating">
-        ⭐ {{ movie.vote_average?.toFixed(1) }} ({{ movie.vote_count }} votos)
+      <div class="rating" *ngIf="movie.vote_average">
+        ⭐ {{ movie.vote_average | number:'1.1-1' }} ({{ movie.vote_count }} votos)
       </div>
 
       <button class="fav-btn" (click)="toggleFavorite()">
@@ -41,7 +41,7 @@
   <div class="videos" *ngIf="trailerUrl; else noVideo">
     <h2>Trailer</h2>
     <iframe
-      [src]="trailerUrl | safeUrl"
+      [src]="trailerUrl"
       width="100%"
       height="420"
       frameborder="0"
@@ -56,7 +56,7 @@
   <div class="credits" *ngIf="credits">
     <h2>Elenco</h2>
     <div class="people-list">
-      <div *ngFor="let cast of credits.cast | slice:0:8" class="person">
+      <div *ngFor="let cast of credits.cast | slice:0:8; trackBy: trackByPerson" class="person">
         <img
           [src]="cast.profile_path ? 'https://image.tmdb.org/t/p/w185' + cast.profile_path : 'assets/no-image.jpg'"
           [alt]="cast.name"
@@ -68,7 +68,7 @@
 
     <h2>Equipe Técnica</h2>
     <div class="people-list">
-      <div *ngFor="let crew of credits.crew | slice:0:8" class="person">
+      <div *ngFor="let crew of credits.crew | slice:0:8; trackBy: trackByPerson" class="person">
         <img
           [src]="crew.profile_path ? 'https://image.tmdb.org/t/p/w185' + crew.profile_path : 'assets/no-image.jpg'"
           [alt]="crew.name"
@@ -80,5 +80,7 @@
   </div>
 </div>
 
-<div *ngIf="loading" class="loading">Carregando detalhes...</div>
-<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+<ng-template #loadingOrError>
+  <div *ngIf="loading" class="loading">Carregando detalhes...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+</ng-template>

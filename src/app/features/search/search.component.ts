@@ -1,69 +1,66 @@
 import { Component, OnInit } from '@angular/core';
-import { MovieService } from 'src/app/core/services/movie.service';
+import { MovieService } from '../../core/services/movie.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
-import { NotificationService } from 'src/app/core/services/notification.service';
-import { FavoritesService } from 'src/app/core/services/favorites.service';
+import { CommonModule, DatePipe, SlicePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-search',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    DatePipe,
+    SlicePipe
+  ],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
-  query = '';
+export class SearchComponent {
+  query: string = '';
   results: any[] = [];
-  private searchTerms = new Subject<string>();
   loading = false;
 
   constructor(
     private movieService: MovieService,
-    private notify: NotificationService,
-    private favoritesService: FavoritesService
+    private favoritesService: FavoritesService,
+    private notify: NotificationService
   ) {}
 
-  ngOnInit(): void {
-    this.searchTerms.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-      switchMap(term => {
-        const q = term.trim();
-        if (q.length < 3) {
-          this.results = [];
-          return of(null);
-        }
-        this.loading = true;
-        return this.movieService.searchMovies(q);
-      })
-    ).subscribe({
-      next: (res: any | null) => {
+  onSearchInput() {
+    if (this.query.length < 3) {
+      this.results = [];
+      return;
+    }
+
+    this.loading = true;
+    this.movieService.searchMovies(this.query).subscribe({
+      next: (res: any) => {
+        this.results = res.results || [];
         this.loading = false;
-        if (res) {
-          this.results = res.results;
-        }
       },
-      error: err => {
-        console.error(err);
+      error: () => {
         this.loading = false;
         this.notify.show('Erro ao buscar filmes.', 'error');
       }
     });
   }
 
-  onSearchInput(): void {
-    this.searchTerms.next(this.query);
+  trackByMovieId(index: number, movie: any) {
+    return movie.id;
   }
 
   addFavorite(movie: any) {
     if (this.favoritesService.isFavorite(movie.id)) {
-      this.notify.show('Filme já está nos favoritos.', 'info');
+      this.notify.show('Filme já está nos favoritos.', 'error');
     } else {
       this.favoritesService.add(movie);
       this.notify.show('Filme adicionado aos favoritos!', 'success');
     }
-  }
-
-  trackByMovieId(index: number, movie: any) {
-    return movie.id;
   }
 }

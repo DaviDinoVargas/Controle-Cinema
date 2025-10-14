@@ -10,19 +10,20 @@ export class TmdbService {
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
-  return new HttpHeaders({
-    Authorization: `Bearer ${environment.accessToken}`,
-    accept: 'application/json'
-  });
-}
-
-private getParams(extra?: any): HttpParams {
-  let params = new HttpParams().set('language', environment.defaultLanguage);
-  if (extra) {
-    Object.entries(extra).forEach(([k, v]) => params = params.set(k, v as string));
+    return new HttpHeaders({
+      Authorization: `Bearer ${environment.accessToken}`,
+      accept: 'application/json'
+    });
   }
-  return params;
-}
+
+  private getParams(extra?: any): HttpParams {
+    let params = new HttpParams().set('language', environment.defaultLanguage);
+    if (extra) {
+      Object.entries(extra).forEach(([k, v]) => params = params.set(k, v as string));
+    }
+    return params;
+  }
+
   getPopularMovies(page = 1) {
     return this.http.get(`${this.baseUrl}/movie/popular`, {
       headers: this.getHeaders(),

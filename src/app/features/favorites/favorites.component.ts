@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FavoritesService } from 'src/app/core/services/favorites.service';
-import { NotificationService } from 'src/app/core/services/notification.service';
+import { CommonModule } from '@angular/common';
+import { FavoritesService } from '../../core/services/favorites.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-favorites',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './favorites.component.html',
   styleUrls: ['./favorites.component.scss']
 })

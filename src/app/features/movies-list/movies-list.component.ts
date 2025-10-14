@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { MovieService } from 'src/app/core/services/movie.service';
-import { FavoritesService } from 'src/app/core/services/favorites.service';
-import { NotificationService } from 'src/app/core/services/notification.service';
+import { CommonModule, DatePipe, SlicePipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+import { MovieService } from '../../core/services/movie.service';
+import { FavoritesService } from '../../core/services/favorites.service';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-movie-list',
-  templateUrl: './movie-list.component.html',
+  standalone: true,
+  imports: [CommonModule, RouterModule, DatePipe, SlicePipe],
+  templateUrl: './movies-list.component.html',
   styleUrls: ['./movie-list.component.scss']
 })
 export class MovieListComponent implements OnInit {
@@ -33,21 +38,22 @@ export class MovieListComponent implements OnInit {
     this.loadMovies();
   }
 
-  async loadMovies(page: number = 1) {
+  loadMovies(page: number = 1) {
     this.loading = true;
     this.errorMessage = '';
 
-    try {
-      const data = await this.movieService.getMovies(this.category, page);
-      this.movies = data.results;
-      this.totalPages = data.total_pages;
-      this.currentPage = data.page;
-    } catch (error) {
-      console.error(error);
-      this.errorMessage = 'Erro ao carregar filmes. Verifique sua conexão ou chave da API.';
-    } finally {
-      this.loading = false;
-    }
+    this.movieService.getMovies(this.category, page).subscribe({
+      next: (data: any) => {
+        this.movies = data.results;
+        this.totalPages = data.total_pages;
+        this.currentPage = data.page;
+      },
+      error: err => {
+        console.error(err);
+        this.errorMessage = 'Erro ao carregar filmes. Verifique sua conexão ou chave da API.';
+      },
+      complete: () => (this.loading = false)
+    });
   }
 
   changeCategory(cat: string) {
@@ -60,7 +66,7 @@ export class MovieListComponent implements OnInit {
 
   addFavorite(movie: any) {
     if (this.favoritesService.isFavorite(movie.id)) {
-      this.notify.show('Filme já está nos favoritos.', 'info');
+      this.notify.show('Filme já está nos favoritos.', 'error');
     } else {
       this.favoritesService.add(movie);
       this.notify.show('Filme adicionado aos favoritos!', 'success');
