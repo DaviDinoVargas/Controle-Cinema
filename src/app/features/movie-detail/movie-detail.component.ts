@@ -15,7 +15,7 @@ import { NotificationService } from '../../core/services/notification.service';
 export class MovieDetailComponent implements OnInit {
   movie: any;
   videos: any[] = [];
-  credits: any;
+  credits: { cast: any[]; crew: any[] } = { cast: [], crew: [] };
   isFavorite = false;
   loading = true;
   errorMessage = '';
@@ -41,6 +41,8 @@ export class MovieDetailComponent implements OnInit {
     this.movieService.getMovieDetails(id).subscribe({
       next: (data: any) => {
         this.movie = data;
+        this.credits = data.credits || { cast: [], crew: [] };
+        this.videos = data.videos?.results || [];
         this.isFavorite = this.favoritesService.isFavorite(id);
       },
       error: err => {
@@ -68,9 +70,17 @@ export class MovieDetailComponent implements OnInit {
   }
 
   get trailerUrl() {
-    const trailer = this.movie?.videos?.results?.find(
-      (v: any) => v.type === 'Trailer' && v.site === 'YouTube'
+    const trailer = this.videos.find(
+      v => v.type === 'Trailer' && v.site === 'YouTube'
     );
     return trailer ? `https://www.youtube.com/embed/${trailer.key}` : null;
+  }
+
+  trackByGenre(index: number, genre: any) {
+    return genre.id;
+  }
+
+  trackByPerson(index: number, person: any) {
+    return person.id;
   }
 }
