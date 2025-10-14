@@ -1,0 +1,51 @@
+<div class="movie-list">
+  <h2>🎞️ Catálogo de Filmes</h2>
+
+  <div class="categories">
+    <button
+      *ngFor="let c of categories"
+      (click)="changeCategory(c.key)"
+      [class.active]="category === c.key">
+      {{ c.label }}
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Carregando filmes...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div class="grid" *ngIf="!loading && !errorMessage">
+    <div
+      class="movie-card"
+      *ngFor="let movie of movies; trackBy: trackByMovieId">
+
+      <img
+        [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w300' + movie.poster_path : 'assets/no-image.jpg'"
+        [alt]="movie.title" />
+
+      <div class="info">
+        <h3>{{ movie.title }}</h3>
+        <p class="release">{{ movie.release_date | date:'dd/MM/yyyy' }}</p>
+        <p class="rating">⭐ {{ movie.vote_average?.toFixed(1) }}</p>
+
+        <p class="overview">
+          {{ movie.overview ? (movie.overview | slice:0:100) + '...' : 'Sem descrição.' }}
+        </p>
+
+        <div class="actions">
+          <button class="details-btn" [routerLink]="['/filme', movie.id]">
+            Ver Detalhes
+          </button>
+          <button class="fav-btn" (click)="addFavorite(movie)">
+            ❤️ Favoritar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="!loading && movies.length > 0">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">⬅️ Anterior</button>
+    <span>Página {{ currentPage }} / {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Próxima ➡️</button>
+  </div>
+</div>

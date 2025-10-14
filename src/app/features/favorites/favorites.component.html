@@ -1,0 +1,33 @@
+<div class="favorites-container">
+  <h2>🎬 Meus Filmes Favoritos</h2>
+
+  <div *ngIf="favorites.length === 0" class="empty">
+    Nenhum filme foi adicionado aos favoritos ainda.
+  </div>
+
+  <div class="favorites-grid" *ngIf="favorites.length > 0">
+    <div class="movie-card" *ngFor="let movie of favorites; trackBy: trackByMovieId">
+      <img
+        [src]="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
+        [alt]="movie.title"
+        class="poster"
+      />
+
+      <div class="info">
+        <h3>{{ movie.title }}</h3>
+        <p>Lançamento: {{ movie.release_date | date: 'dd/MM/yyyy' }}</p>
+        <p class="rating">
+          ⭐ {{ movie.vote_average?.toFixed(1) }}
+        </p>
+
+        <button class="remove-btn" (click)="removeFavorite(movie.id)">
+          Remover
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions" *ngIf="favorites.length > 0">
+    <button class="clear-btn" (click)="clearAll()">🗑️ Limpar todos</button>
+  </div>
+</div>

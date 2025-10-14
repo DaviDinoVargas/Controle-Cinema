@@ -1,0 +1,84 @@
+<div class="movie-detail" *ngIf="!loading && movie">
+  <div class="header">
+    <img
+      class="poster"
+      [src]="'https://image.tmdb.org/t/p/w300' + movie.poster_path"
+      [alt]="movie.title"
+    />
+
+    <div class="info">
+      <h1>{{ movie.title }}</h1>
+      <p class="tagline" *ngIf="movie.tagline">{{ movie.tagline }}</p>
+
+      <div class="meta">
+        <span>Lançamento: {{ movie.release_date | date:'dd/MM/yyyy' }}</span>
+        <span>Duração: {{ movie.runtime }} min</span>
+      </div>
+
+      <div class="genres">
+        <span *ngFor="let g of movie.genres">{{ g.name }}</span>
+      </div>
+
+      <div class="rating">
+        ⭐ {{ movie.vote_average?.toFixed(1) }} ({{ movie.vote_count }} votos)
+      </div>
+
+      <button class="fav-btn" (click)="toggleFavorite()">
+        <span *ngIf="!isFavorite">❤️ Adicionar aos Favoritos</span>
+        <span *ngIf="isFavorite">💔 Remover dos Favoritos</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="overview">
+    <h2>Sinopse</h2>
+    <p *ngIf="movie.overview; else noSynopsis">{{ movie.overview }}</p>
+    <ng-template #noSynopsis>
+      <p class="empty">Sinopse não disponível.</p>
+    </ng-template>
+  </div>
+
+  <div class="videos" *ngIf="trailerUrl; else noVideo">
+    <h2>Trailer</h2>
+    <iframe
+      [src]="trailerUrl | safeUrl"
+      width="100%"
+      height="420"
+      frameborder="0"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <ng-template #noVideo>
+    <p class="empty">Nenhum trailer disponível.</p>
+  </ng-template>
+
+  <div class="credits" *ngIf="credits">
+    <h2>Elenco</h2>
+    <div class="people-list">
+      <div *ngFor="let cast of credits.cast | slice:0:8" class="person">
+        <img
+          [src]="cast.profile_path ? 'https://image.tmdb.org/t/p/w185' + cast.profile_path : 'assets/no-image.jpg'"
+          [alt]="cast.name"
+        />
+        <div>{{ cast.name }}</div>
+        <small>{{ cast.character }}</small>
+      </div>
+    </div>
+
+    <h2>Equipe Técnica</h2>
+    <div class="people-list">
+      <div *ngFor="let crew of credits.crew | slice:0:8" class="person">
+        <img
+          [src]="crew.profile_path ? 'https://image.tmdb.org/t/p/w185' + crew.profile_path : 'assets/no-image.jpg'"
+          [alt]="crew.name"
+        />
+        <div>{{ crew.name }}</div>
+        <small>{{ crew.job }}</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading">Carregando detalhes...</div>
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>

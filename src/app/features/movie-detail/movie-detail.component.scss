@@ -1,0 +1,135 @@
+.movie-detail {
+  color: #fff;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+
+  .header {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+
+    .poster {
+      width: 280px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 0.2rem;
+      }
+
+      .tagline {
+        font-style: italic;
+        opacity: 0.8;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: 0.95rem;
+      }
+
+      .genres {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        span {
+          background: #444;
+          border-radius: 20px;
+          padding: 4px 10px;
+          font-size: 0.8rem;
+        }
+      }
+
+      .rating {
+        margin-top: 0.5rem;
+        font-size: 1.2rem;
+        color: #ffd700;
+      }
+
+      .fav-btn {
+        margin-top: 1rem;
+        background: #f44336;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        padding: 10px 16px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s ease;
+
+        &:hover {
+          background: #d32f2f;
+        }
+      }
+    }
+  }
+
+  .overview {
+    margin-top: 2rem;
+
+    h2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .empty {
+      opacity: 0.7;
+    }
+  }
+
+  .videos {
+    margin-top: 2rem;
+
+    iframe {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+  }
+
+  .credits {
+    margin-top: 2rem;
+
+    .people-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .person {
+        width: 120px;
+        text-align: center;
+
+        img {
+          width: 100%;
+          border-radius: 8px;
+          margin-bottom: 0.3rem;
+        }
+
+        small {
+          display: block;
+          opacity: 0.7;
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+
+  .loading,
+  .error {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+  }
+
+  .error {
+    color: #f44336;
+  }
+}

@@ -1,0 +1,45 @@
+<div class="search-container">
+  <h2>🔎 Buscar Filmes</h2>
+
+  <input
+    type="text"
+    placeholder="Digite ao menos 3 caracteres..."
+    [(ngModel)]="query"
+    (ngModelChange)="onSearchInput()"
+  />
+
+  <div *ngIf="loading" class="loading">Buscando filmes...</div>
+  <div *ngIf="!loading && results.length === 0 && query.length >= 3" class="no-results">
+    Nenhum filme encontrado para "{{ query }}"
+  </div>
+
+  <div class="results-grid" *ngIf="results.length > 0">
+    <div
+      class="movie-card"
+      *ngFor="let movie of results; trackBy: trackByMovieId">
+
+      <img
+        [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w300' + movie.poster_path : 'assets/no-image.jpg'"
+        [alt]="movie.title" />
+
+      <div class="info">
+        <h3>{{ movie.title }}</h3>
+        <p class="release">{{ movie.release_date | date:'dd/MM/yyyy' }}</p>
+        <p class="rating">⭐ {{ movie.vote_average?.toFixed(1) }}</p>
+
+        <p class="overview">
+          {{ movie.overview ? (movie.overview | slice:0:100) + '...' : 'Sem descrição.' }}
+        </p>
+
+        <div class="actions">
+          <button class="details-btn" [routerLink]="['/filme', movie.id]">
+            Ver Detalhes
+          </button>
+          <button class="fav-btn" (click)="addFavorite(movie)">
+            ❤️ Favoritar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

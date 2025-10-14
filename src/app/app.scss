@@ -1,0 +1,79 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #121212;
+  color: #fff;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ====== Header ====== */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f1f1f;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  flex-wrap: wrap;
+
+  .logo {
+    font-size: 1.3rem;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: #90caf9;
+    }
+  }
+
+  .nav-menu {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    a {
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: #fff;
+      }
+
+      &.active {
+        color: #90caf9;
+        border-bottom: 2px solid #90caf9;
+        padding-bottom: 2px;
+      }
+    }
+  }
+}
+
+/* ====== Conteúdo ====== */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+/* ====== Footer ====== */
+.app-footer {
+  background: #1f1f1f;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #aaa;
+  border-top: 1px solid #333;
+
+  a {
+    color: #90caf9;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

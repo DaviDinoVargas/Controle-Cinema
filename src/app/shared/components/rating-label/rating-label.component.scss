@@ -1,0 +1,22 @@
+.rating-label {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #fff;
+  font-size: 0.9rem;
+  min-width: 40px;
+  text-align: center;
+
+  &.excellent {
+    background-color: #4caf50; // verde
+  }
+
+  &.average {
+    background-color: #ff9800; // laranja
+  }
+
+  &.bad {
+    background-color: #f44336; // vermelho
+  }
+}
